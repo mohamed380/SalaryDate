@@ -1,0 +1,19 @@
+{
+    "name": "mohamed/salary-date",
+    
+    "autoload-dev": {
+        "psr-4": {
+            "Mohamed\\Testing\\": "src/"
+        }
+    },
+
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+
+    "require": {
+        "phpunit/phpunit": "^9.5"
+    }
+}
