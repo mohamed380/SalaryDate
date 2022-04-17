@@ -13,7 +13,7 @@ try {
 
     $file = new File($argv[1]);
     $file->process();
-    echo "\n\e[0;32;40mDone!, Checkout file path!\e[0m\n";
+    echo "\n\e[0;32;40mDone!, Check file path!\e[0m\n";
 
 } catch (\Exception $exception) {
 

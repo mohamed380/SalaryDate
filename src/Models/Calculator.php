@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use DateTime;
+
 class Calculator {
 
     public const SUNDAY = 'Sunday';
@@ -12,7 +14,7 @@ class Calculator {
         if( empty($row[File::SALARY_DATE_INDEX]) ){
             $row[File::SALARY_DATE_INDEX] = self::getSalaryDate($row[File::MONTH_INDEX]);
         }
-        
+
         if( empty($row[File::BOUNS_DATE_INDEX]) ){
             $row[File::BOUNS_DATE_INDEX] = self::getBounsDate($row[File::MONTH_INDEX]);
         }
@@ -22,32 +24,26 @@ class Calculator {
 
     private static function getSalaryDate(string $month)
     {
-        $date = date('Y') ."-". date('m',strtotime($month)) . "-" . date('t', strtotime($month));
-        $day = date('l', strtotime($date));
-
-        if ( $day ==  self::SUNDAY){
-            $date = date('Y-m-d', strtotime($date. '+ 1 days'));
+        $date = new DateTime($month);
+        $endDateFormated = $date->format('Y-m-t');
+        $endDate = new DateTime($endDateFormated);
+        $day = ($endDate)->format('l');
+        if ($day ==  self::SUNDAY) {
+            $endDate = $endDate->add(new \DateInterval('P1D'));
+        }elseif ($day == self::SATURDAY) {
+            $endDate = $endDate->add(new \DateInterval('P2D'));
         }
-
-        if ( $day == self::SATURDAY ){
-            $date = date('Y-m-d', strtotime($date. '+ 2 days'));
-        }
-        
-        return $date;
+        return $endDate->format('Y-m-d');
     }
 
     private static function getBounsDate(string $month)
     {
-        $date = date('Y') ."-".  date('m',strtotime($month)) . "-15";
-        $day = date('l', strtotime($date));
-
-        if ( in_array($day, [self::SATURDAY, self::SUNDAY]) ){
-
-            $date =  date('Y-m-d', strtotime($date. ' next Wednesday')); // get next wednesday
-
+        $date = new DateTime("$month-15");
+        $day = $date->format('l');
+        if (in_array($day, [self::SATURDAY, self::SUNDAY])) {
+            $date =  $date->modify('next Wednesday'); // get next wednesday
         }
-
-        return $date;
+        return $date->format('Y-m-d');
     }
 
 
